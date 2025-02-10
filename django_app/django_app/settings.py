@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,15 +26,17 @@ SECRET_KEY = 'django-insecure-40bl2lmaqn+rp*ech@71l6#u14u4#-_-w+copu^m^nuf6mk_q3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'betanet',
-        'USER': 'user',
-        'PASSWORD': 'password',
-        'HOST': 'db',
+        'NAME': 'betanet',  # Your local DB name
+        'USER': 'postgres',
+        'PASSWORD': 'yourpassword',  
+        'HOST': '127.0.0.1',  
         'PORT': '5432',
     }
 }
@@ -47,6 +50,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework_simplejwt',
+    'rest_framework',
+    'users',
+    'products',
+    'orders',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +66,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+
+
 
 ROOT_URLCONF = 'django_app.urls'
 
@@ -80,15 +99,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'django_app.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+
+
 
 
 # Password validation
