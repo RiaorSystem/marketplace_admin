@@ -1,20 +1,35 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
+from .models import CustomUser
 from rest_framework_simplejwt.tokens import RefreshToken
-
-User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['full_name', 'email', 'phone_number']
+        model = CustomUser
+        fields = ['first_name','last_name', 'email', 'phone_number']
 
 class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
+
     class Meta:
-        model = User
-        fields = ['full_name', 'email', 'phone_number', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'password', 'confirm_password']
+
+    def validate(self, data):
+        """Ensure both passwords match."""
+        if data.get('password') != data.get('confirm_password'):
+            raise serializers.ValidationError({"confirm_password": "Passwords do not match."})
+        return data
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user 
+        validated_data.pop('confirm_password')  # Remove confirm_password
+        password = validated_data.pop('password')
+
+        # Generate a unique username from email
+        email = validated_data.get('email')
+        validated_data['username'] = email.split('@')[0]  # Use email prefix as username
+
+        user = CustomUser(**validated_data)
+        user.set_password(password)  # Hash password
+        user.save()
+        return user
