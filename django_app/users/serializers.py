@@ -3,7 +3,8 @@ from .models import CustomUser
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta:  
+        
         model = CustomUser
         fields = ['first_name','last_name', 'email', 'phone_number']
 
@@ -32,4 +33,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = CustomUser(**validated_data)
         user.set_password(password)  # Hash password
         user.save()
-        return user
+        return user 
+    
+class SignInSerializer(serializers.Serializer): 
+    email = serializers.EmailField() 
+    password = serializers.CharField(write_only=True)

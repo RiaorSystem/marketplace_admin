@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework_simplejwt'
+    'rest_framework_simplejwt',
     'corsheaders',
     'users',
 ]
@@ -52,7 +52,7 @@ REST_FRAMEWORK = {
 }
 
 
-simple_JWT ={
+SIMPLE_JWT ={
     'ACCESS_TOKEN_LIFETIME' : timedelta(minutes = 60),
     'REFRESH_TOKEN_LIFETIME' : timedelta(days = 1),
 }
@@ -61,6 +61,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -138,4 +139,6 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' 
+
+CORS_ALLOW_ALL_ORIGINS = True

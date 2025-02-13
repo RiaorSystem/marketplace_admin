@@ -1,9 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import RegisterSerializer
-from .serializers import LoginSerializer
+from .serializers import SignInSerializer
 from rest_framework import status
 from django.contrib.auth import authenticate
+from .serializers import SignInSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
@@ -19,7 +20,7 @@ class SignUpView(APIView):
 
 class  SignInView(APIView):
     def post(self,request):
-        serializer = loginSerializer(data = request.data)
+        serializer = SignInSerializer(data = request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
@@ -35,4 +36,4 @@ class  SignInView(APIView):
                  return  Response({
                      'error' : 'Invalid credentials'
                  }, status =status.HTTP_401_UNAUTHORIZED)   
-        return Response(serializer.errors,status = status.HTTP_404_BAD_REQUEST)                
+        return Response(serializer.errors,status = status.HTTP_404_NOT_FOUND)                
