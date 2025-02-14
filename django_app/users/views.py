@@ -5,6 +5,7 @@ from .serializers import ProfileSerializer
 from .models import Profile
 from rest_framework import status
 from django.contrib.auth import authenticate
+from rest_framework.permissions import IsAuthenticated
 from .serializers import SignInSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
