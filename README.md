@@ -1,4 +1,5 @@
 Betanet Marketplace - Backend 🚀
+
 A multi-vendor marketplace backend built with Django & FastAPI, supporting user authentication, role management, social login, and profile updates.
 
 🔹 Features Implemented
