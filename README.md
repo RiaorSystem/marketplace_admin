@@ -26,20 +26,14 @@ GET /api/auth/facebook/login/ – Facebook Login
 🔹 How to Run Locally
 1️⃣ Install Dependencies
 
-bash
-Copy
-Edit
+
 pip install -r requirements.txt
 2️⃣ Run Migrations
 
-bash
-Copy
-Edit
+
 python manage.py makemigrations
 python manage.py migrate
 3️⃣ Start the Server
 
-bash
-Copy
-Edit
+
 python manage.py runserver
