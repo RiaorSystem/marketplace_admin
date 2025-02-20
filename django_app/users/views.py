@@ -26,31 +26,18 @@ class  SignInView(APIView):
         if serializer.is_valid():
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
-        #authenticate user
-            user = authenticate(request,email=email, password=password)
-            if user:
-                refresh = RefreshToken.for_user(user)
-                return Response({
-                    'access_token':str(refresh.access_token),
-                    'refresh_token':str(refresh),
-                },status = status.HTTP_200_OK ) 
-            else: 
-                 return  Response({
-                     'error' : 'Invalid credentials'
-                 }, status =status.HTTP_401_UNAUTHORIZED)   
-        return Response(serializer.errors,status = status.HTTP_404_NOT_FOUND)       
-
+        
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]     
 
-def get(self,request):
-    profile = Profile.objects.get(user=request.user)
-    serializer = ProfileSerializer(profile)
-    return Response (serializer.data)
+    def get(self,request):
+        profile = Profile.objects.get(user=request.user)
+        serializer = ProfileSerializer(profile)
+        return Response (serializer.data)
 
-def put(self,request):
-    profile = Profile.objects.get(user=request.user)
-    serializer = ProfileSerializer(profile,data=request.data,partial=True)
+    def put(self,request):
+        profile = Profile.objects.get(user=request.user)
+        serializer = ProfileSerializer(profile,data=request.data,partial=True)
 
     if serializer.is_valid():
         serializer.save()
@@ -58,7 +45,7 @@ def put(self,request):
 
     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-def delete(self,request):
-    profile = Profile.objects.get(user=request.user)
-    profile = delete()
-    return Response(status = status.HTTP_204_NO_CONTENT)
+    def delete(self,request):
+        profile = Profile.objects.get(user=request.user)
+        profile = delete()
+        return Response(status = status.HTTP_204_NO_CONTENT)
