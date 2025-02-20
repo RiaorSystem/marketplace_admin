@@ -1,15 +1,39 @@
-# marketplace_admin 
+Betanet Marketplace - Backend 🚀
+A multi-vendor marketplace backend built with Django & FastAPI, supporting user authentication, role management, social login, and profile updates.
 
-# BetApp
+🔹 Features Implemented
+✅ User Authentication (Signup, Login, JWT)
+✅ User Roles (Admin, Seller, Buyer)
+✅ Profile Management (Update Info, Change Password, Upload Profile Picture)
+✅ Social Login (Google, Facebook, Twitter, Instagram)
 
-BetApp is a marketplace app developed by **BetaNet** in collaboration with **Adata Corporation**
+🔹 API Endpoints
+📍 Authentication
 
-## License
+POST /api/auth/register/ – User Signup
+POST /api/auth/login/ – User Login
+POST /api/auth/logout/ – Logout
+📍 Profile Management
 
-This project is proprietary software owned by BetaNet. Unauthorized use, modification, or distribution is prohibited. See the [LICENSE](LICENSE) file for details.
+GET /api/auth/profile/ – View Profile
+PUT /api/auth/profile/ – Update Profile
+PUT /api/auth/profile-picture/ – Upload Profile Picture
+POST /api/auth/change-password/ – Change Password
+📍 Social Authentication
 
-## Collaborators
+GET /api/auth/google/login/ – Google Login
+GET /api/auth/facebook/login/ – Facebook Login
+🔹 How to Run Locally
+1️⃣ Install Dependencies
 
-- **BetaNet** and.
-- **Adata Corporation**: Collaborator and contributor to the project.
-- **Betanet Company**: Collaborator and contributor to the project.
+
+pip install -r requirements.txt
+2️⃣ Run Migrations
+
+
+python manage.py makemigrations
+python manage.py migrate
+3️⃣ Start the Server
+
+
+python manage.py runserver
