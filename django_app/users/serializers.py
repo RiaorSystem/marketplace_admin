@@ -1,12 +1,8 @@
 from rest_framework import serializers
 from .models import CustomUser, UserRoles
 from rest_framework_simplejwt.tokens import RefreshToken
-<<<<<<< HEAD
-from .models import Profile
-=======
 from django.contrib.auth import authenticate, get_user_model
 from django.core.files.images import get_image_dimensions
->>>>>>> 7f4e1be64385842b16a060c36cdf985ab7325bf1
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:  
@@ -48,12 +44,6 @@ class SignInSerializer(serializers.Serializer):
     email = serializers.EmailField() 
     password = serializers.CharField(write_only=True)
 
-<<<<<<< HEAD
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ['bio','profile_picture','date_of_birth','phone_number','address']
-=======
     def validate(self,data):
         email = data['email']
         password = data['password']
@@ -101,4 +91,3 @@ class ChangePasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError({"confirm_password": "Passwords do not match."})
         
         return data
->>>>>>> 7f4e1be64385842b16a060c36cdf985ab7325bf1

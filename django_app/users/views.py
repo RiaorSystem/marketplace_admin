@@ -1,22 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework.response import Response
-<<<<<<< HEAD
-from .serializers import RegisterSerializer
-from .serializers import ProfileSerializer
-from .models import Profile
-=======
 from .serializers import SignInSerializer
->>>>>>> 7f4e1be64385842b16a060c36cdf985ab7325bf1
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
-<<<<<<< HEAD
-from .serializers import SignInSerializer
-=======
 from .serializers import SignInSerializer, UserProfileSerializer, RegisterSerializer, ChangePasswordSerializer
->>>>>>> 7f4e1be64385842b16a060c36cdf985ab7325bf1
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import generics
 
@@ -35,33 +25,6 @@ class  SignInView(APIView):
     def post(self, request):
         serializer = SignInSerializer(data=request.data)
         if serializer.is_valid():
-<<<<<<< HEAD
-            email = serializer.validated_data['email']
-            password = serializer.validated_data['password']
-        
-class ProfileView(APIView):
-    permission_classes = [IsAuthenticated]     
-
-    def get(self,request):
-        profile = Profile.objects.get(user=request.user)
-        serializer = ProfileSerializer(profile)
-        return Response (serializer.data)
-
-    def put(self,request):
-        profile = Profile.objects.get(user=request.user)
-        serializer = ProfileSerializer(profile,data=request.data,partial=True)
-
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
-
-    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self,request):
-        profile = Profile.objects.get(user=request.user)
-        profile = delete()
-        return Response(status = status.HTTP_204_NO_CONTENT)
-=======
             user = serializer.validated_data['user']
             refresh = RefreshToken.for_user(user)
             return Response({
@@ -105,4 +68,3 @@ class ChangePasswordView(APIView):
             user.save()
             return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
->>>>>>> 7f4e1be64385842b16a060c36cdf985ab7325bf1
