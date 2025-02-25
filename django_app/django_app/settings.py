@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'products',
     'users',
+    'orders',
 ]
 
 SITE_ID = 1
