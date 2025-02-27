@@ -2,6 +2,7 @@ import requests
 import base64
 from datetime import datetime
 from django.conf import settings
+from orders.models import Order
 
 def get_mpesa_access_token():
     """Fetch M-Pesa access token"""
@@ -18,7 +19,7 @@ def lipa_na_mpesa(phone_number, amount):
 
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     password_str = f"{settings.MPESA_SHORTCODE}{settings.MPESA_PASSKEY}{timestamp}"
-    password = base64.b64encode(password_str.encode()).decode()  # ✅ Fix: Decode bytes to string
+    password = base64.b64encode(password_str.encode()).decode() 
 
     url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
     headers = {"Authorization": f"Bearer {access_token}", "Content-Type": "application/json"}
@@ -37,5 +38,21 @@ def lipa_na_mpesa(phone_number, amount):
         "TransactionDesc": "Payment of X"
     }
 
-    response = requests.post(url, json=payload, headers=headers)  # ✅ Ensure `json=payload` (not `data=payload`)
+    response = requests.post(url, json=payload, headers=headers)  
     return response.json()
+
+def process_mpesa_payment(data):
+    transaction_id = data.get("TransID")
+    amount = float(data.get("TransAmount", 0))
+    phone_number = data.get("MSISDN")
+
+    try:
+        order = Order.objects.get(transaction_id=transaction_id, status="pending")
+        if order.total_amount == amount:
+            order.status = "Paid"
+            order.save()
+            return {"success": "Order payment confirmed"}
+        else:
+            return{"error": "Amount mismatch"}
+    except Order.DoesNotExist:
+        return {"error": "Order not found"}
