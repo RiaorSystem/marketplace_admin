@@ -1,3 +1,4 @@
+import requests
 from django.db import models
 from users.models import CustomUser
 from products.models import Product
@@ -26,3 +27,20 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} - {self.user.email}"
+
+    def save(self, *args, **kwargs):
+        """Notify FastAPI whenever order status changes"""
+        if self.pk:  # Only notify if the order already exists
+            old_status = Order.objects.get(pk=self.pk).status
+            if old_status != self.status:
+                self.notify_fastapi()
+        super().save(*args, **kwargs)
+
+    def notify_fastapi(self):
+        """Send order update to FastAPI"""
+        url = f"http://localhost:8001/track_order/{self.id}"
+        payload = {"order_id": self.id, "status": self.status}
+        try:
+            requests.post(url, json=payload)
+        except requests.exceptions.RequestException as e:
+            print(f"Failed to notify FastAPI: {e}")
