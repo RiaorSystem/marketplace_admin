@@ -39,8 +39,15 @@ A full-stack eCommerce marketplace built with **Django REST Framework (DRF)** & 
 ✅ WebSockets for Instant Order Updates  
 ✅ Buyers Get Real-Time Order Status from Sellers  
 
+### 8️⃣ Escrow System for Advertisements
+✅ **Secure Transactions Between Sellers & Advertisers**  
+✅ **Funds Are Held in Escrow Until Ad Completion**  
+✅ **Buyers (Advertisers) Apply for Advertisement Opportunities**  
+✅ **Engagement Stats Are Submitted via Image Upload or Social Media Link**  
+✅ **Sellers Approve Applications & Release Funds to Advertisers**  
+
+
 ### 🔜 Next Steps
-🚧 **Implement Escrow System** (Hold Funds Until Order Completion)  
 🚧 **Admin Dashboard** (Manage Orders & Payments)  
 
 ---
@@ -168,4 +175,60 @@ curl -X PUT http://127.0.0.1:8000/api/orders/1/update/ -H "Authorization: Bearer
 ```json
 {"order_id": 1, "status": "processing"}
 ```
+
+
+### 5️⃣ API Testing for Escrow System
+
+### ✅ Create an Advertisement (Seller Only)
+```bash
+curl -X POST http://127.0.0.1:8000/api/escrow/ads/create/ -H "Authorization: Bearer seller_jwt_access_token" -H "Content-Type: application/json" -d '{                    
+    "title": "Promote my product",
+    "description": "Advertise my new brand",
+    "budget": 50,
+    "duration": 7
+}'
+```
+ **Expected Response**
+```json
+{"id": 1, "title": "Promote my product", "budget": 50, "duration": 7}
+```
+
+---
+
+### ✅ Apply for Advertisement (Buyer)
+```bash
+curl -X POST http://127.0.0.1:8000/api/escrow/ads/1/apply/ -H "Authorization: Bearer buyer_jwt_access_token" -H "Content-Type: application/json" -d '{}'
+```
+ **Expected Response**
+```json
+{"id": 1, "advertiser_name": "buyer1", "advertisement_title": "Promote my product"}
+```
+
+---
+
+### ✅ Submit Engagement Stats (Image Upload or Social Media Link)
+ **Submit Engagement Proof via Image Upload**
+```bash
+curl -X POST http://127.0.0.1:8000/api/escrow/ads/1/submit-stats/ -H "Authorization: Bearer buyer_jwt_access_token" -F "engagement_photo=@/path/to/photo.jpg"
+```
+ **OR Submit a Social Media Link**
+```bash
+curl -X POST http://127.0.0.1:8000/api/escrow/ads/1/submit-stats/ -H "Authorization: Bearer buyer_jwt_access_token" -H "Content-Type: application/json" -d '{"engagement_link": "https://tiktok.com/post/1234"}'
+```
+ **Expected Response**
+```json
+{"message": "Engagement stats submitted"}
+```
+
+---
+
+### ✅ Approve Advertisement & Release Funds (Seller)
+```bash
+curl -X POST http://127.0.0.1:8000/api/escrow/ads/1/approve/ -H "Authorization: Bearer seller_jwt_access_token"
+```
+ **Expected Response**
+```json
+{"message": "Funds released to advertiser"}
+```
+
 
