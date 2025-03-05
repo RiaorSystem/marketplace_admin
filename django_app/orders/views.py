@@ -6,6 +6,7 @@ from .models import Cart, Order, OrderItem
 from products.models import Product
 from .serializers import CartSerializer, OrderSerializer
 from django.db import transaction
+from users.permissions import IsSeller
 
 class CartView(APIView):
     permission_classes = [IsAuthenticated]
@@ -94,3 +95,22 @@ class AdminUpdateOrderStatusView(APIView):
             return Response({"message": f"Order {order_id} status updated to {new_status}"}, status=status.HTTP_200_OK)
         except Order.DoesNotExist:
             return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
+class UpdateOrderStatusView(APIView):
+    permission_classes = [IsSeller, IsAuthenticated]
+
+    def put(self, request, order_id):
+        new_status = request.data.get("status")
+        
+        try:
+            order = Order.objects.get(id=order_id)
+        except Order.DoesNotExist:
+            return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        order_items = OrderItem.objects.filter(order=order, product__seller=request.user)
+        if not order_items.exists():
+            return Response({"error": " You don't have permission to upddate this order"}, status=status.HTTP_403_FORBIDDEN)
+        
+        order.status = new_status
+        order.save()
+
+        return Response({"message": f"Order stsus updated to {new_status}"}, status=status.HTTP_200_OK)

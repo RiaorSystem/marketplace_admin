@@ -37,7 +37,8 @@ class  SignInView(APIView):
                     'username': user.username,
                     'phone_number': user.phone_number,
                     'profile_picture': user.profile_picture.url if user.profile_picture else None,
-                    'bio': user.bio
+                    'bio': user.bio,
+                    "role": user.role
                 }
             }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

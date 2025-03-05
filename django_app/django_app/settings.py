@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     'products',
     'users',
     'orders',
+    'payments',
+    'escrow',
 ]
 
 SITE_ID = 1
@@ -66,6 +68,14 @@ SITE_ID = 1
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
+
+# M-Pesa API Credentials (Replace with your actual keys)
+MPESA_CONSUMER_KEY = "Ax0ACPVHSEawrZB8umxCRTDYSUiTFVLrYIpksyvXjqc7AkkY"
+MPESA_CONSUMER_SECRET = "T7I1ACca8SaYga7K105xKlJpN2n5jTyGcnUUJI1yNs1nvHAlqnXLnTRgHDndcWUx"
+MPESA_SHORTCODE = "174379"  
+MPESA_PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+MPESA_CALLBACK_URL = "https://yourdomain.com/api/mpesa/callback/"
+
 
 # Social Auth Configuration
 SOCIALACCOUNT_PROVIDERS = {
