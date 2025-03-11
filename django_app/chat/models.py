@@ -23,3 +23,13 @@ class Message(models.Model):
 
     def __str__(self):
         return f"Messages from {self.sender} in chat {self.chat.id}"
+    
+class Status(models.Model):
+    """Users can post status updates visible to contacts"""
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="statuses")
+    text = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to="status_images/", blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Status by {self.user}"

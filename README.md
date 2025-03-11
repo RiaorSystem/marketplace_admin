@@ -46,6 +46,12 @@ A full-stack eCommerce marketplace built with **Django REST Framework (DRF)** & 
 ✅ **Engagement Stats Are Submitted via Image Upload or Social Media Link**  
 ✅ **Sellers Approve Applications & Release Funds to Advertisers**  
 
+### 9️⃣ Chat & Status System (FastAPI WebSockets)
+✅ **Real-Time Private Messaging** (Buyers & Sellers Can Chat)  
+✅ **Search for Users Before Messaging**  
+✅ **Start a Chat Using Username Instead of ID**  
+✅ **View Contacts & Past Conversations**  
+✅ **Post Status Updates Visible to Contacts** 
 
 ### 🔜 Next Steps
 🚧 **Admin Dashboard** (Manage Orders & Payments)  
@@ -177,7 +183,7 @@ curl -X PUT http://127.0.0.1:8000/api/orders/1/update/ -H "Authorization: Bearer
 ```
 
 
-### 5️⃣ API Testing for Escrow System
+### 5️⃣ Escrow System
 
 ### ✅ Create an Advertisement (Seller Only)
 ```bash
@@ -231,4 +237,105 @@ curl -X POST http://127.0.0.1:8000/api/escrow/ads/1/approve/ -H "Authorization: 
 {"message": "Funds released to advertiser"}
 ```
 
+### 6️⃣ Chat System
 
+### ✅ Search for Users Before Messaging
+```bash
+curl -X GET "http://127.0.0.1:8000/api/chat/search/?q=Akoth" -H "Authorization: Bearer user_jwt_access_token"
+```
+ **Expected Response**
+ ```json
+[
+    {
+        "id": 2,
+        "username": "Akoth",
+        "first_name": "Akoth",
+        "last_name": "Mwendwa",
+        "email": "akoth@example.com"
+    }
+]
+```
+
+---
+
+### ✅ Start a Chat Using a Username
+```bash
+curl -X POST http://127.0.0.1:8000/api/chat/chats/send/ -H "Authorization: Bearer user_jwt_access_token" -H "Content-Type: application/json" -d '{"receiver_username": "Akoth", "content": "Hello Akoth, how are you?"}'
+```
+ **Expected Response**
+```json
+{
+    "id": 1,
+    "chat": 1,
+    "sender": 1,
+    "sender_name": "buyer1",
+    "content": "Hello Akoth, how are you?",
+    "timestamp": "2025-03-10T10:00:00Z"
+}
+```
+
+---
+
+### ✅ View Chat List (Users You've Chatted With)
+```bash
+curl -X GET http://127.0.0.1:8000/api/chat/chats/ -H "Authorization: Bearer user_jwt_access_token"
+```
+ **Expected Response**
+ ```json
+[
+    {
+        "contact_id": 2,
+        "phone_number": "254712345678",
+        "contact_name": "John Doe"
+    },
+    {
+        "contact_id": 3,
+        "phone_number": "254798765432",
+        "contact_name": "Jane Smith"
+    }
+]
+```
+
+---
+### ✅ Send a Real-Time Message via WebSockets
+ **Open WebSocket Connection for Chat**  
+ Run in **Terminal 1** (User A):
+```bash
+websocat ws://127.0.0.1:8001/ws/chat/1
+```
+Run in **Terminal 2** (User B):
+```bash
+websocat ws://127.0.0.1:8001/ws/chat/2
+```
+ **Expected: Messages appear instantly between users!**  
+
+---
+
+### ✅ Post a Status Update
+```bash
+curl -X POST http://127.0.0.1:8000/api/chat/status/post/ -H "Authorization: Bearer user_jwt_access_token" -H "Content-Type: application/json" -d '{"text": "Check out my new product!"}'
+```
+ **Expected Response**
+```json
+{"message": "Status posted successfully."}
+```
+
+---
+
+### ✅ View Status Updates from Contacts
+```bash
+curl -X GET http://127.0.0.1:8000/api/chat/status/view/ -H "Authorization: Bearer user_jwt_access_token"
+```
+ **Expected Response**
+```json
+[
+    {
+        "id": 1,
+        "user_name": "seller1",
+        "text": "Check out my new product!",
+        "created_at": "2025-03-10T10:10:00Z"
+    }
+]
+```
+
+---
