@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework.response import Response
 from .serializers import SignInSerializer
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
@@ -10,6 +10,12 @@ from .serializers import SignInSerializer, UserProfileSerializer, RegisterSerial
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import generics
 from .models import Contact, CustomUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from .serializers import SignInSerializer, UserProfileSerializer, RegisterSerializer, ChangePasswordSerializer, UserSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import generics
+from .models import CustomUser
+
 
 class SignUpView(APIView):
     def post(self, request):
@@ -93,3 +99,12 @@ class GetContactsView(APIView):
     def get(self, request):
         contacts = Contact.objects.filter(owner=request.user, contact_user__isnull=False)
         return Response(ContactSerializer(contacts, many=True).data, status=status.HTTP_200_OK)
+class AdminUserListView(generics.ListAPIView):
+    queryset = CustomUser.objects
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+
+class AdminUserDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
