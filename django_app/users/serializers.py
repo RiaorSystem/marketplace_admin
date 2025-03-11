@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, UserRoles
+from .models import CustomUser, UserRoles, Contact
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, get_user_model
 from django.core.files.images import get_image_dimensions
@@ -91,3 +91,10 @@ class ChangePasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError({"confirm_password": "Passwords do not match."})
         
         return data
+    
+class ContactSerializer(serializers.ModelSerializer):
+    contact_name = serializers.CharField(source="contact_user.username", read_only=True)
+
+    class Meta:
+        model = Contact
+        fields = ["id", "phone_number", "contact_user", "contact_name"]
