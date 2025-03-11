@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'orders',
     'payments',
     'escrow',
+    'chat',
 ]
 
 SITE_ID = 1
