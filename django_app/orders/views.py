@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Cart, Order, OrderItem
 from products.models import Product
 from .serializers import CartSerializer, OrderSerializer
@@ -76,6 +76,25 @@ class OrderHistoryView(APIView):
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+class AdminOrderListView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        orders = Order.objects.all().values("id", "user__email", "total_amount", "status")
+        return Response({"orders": list(orders)}, status=status.HTTP_200_OK)
+    
+class AdminUpdateOrderStatusView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def put(self, request, order_id):
+        try:
+            order = Order.objects.data.get(id=order_id)
+            new_status = request.data.get("status")
+            order.status = new_status
+            order.save()
+            return Response({"message": f"Order {order_id} status updated to {new_status}"}, status=status.HTTP_200_OK)
+        except Order.DoesNotExist:
+            return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
 class UpdateOrderStatusView(APIView):
     permission_classes = [IsSeller, IsAuthenticated]
 
