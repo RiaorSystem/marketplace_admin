@@ -27,7 +27,6 @@ urlpatterns = [
     path('api/', include('orders.urls')),
     path('api/payments/', include('payments.urls')),
     path('api/escrow/', include('escrow.urls')),
-    path('api/chat/', include('chat.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
