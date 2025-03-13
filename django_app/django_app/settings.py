@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from datetime import timedelta 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +30,8 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Application definition
 
@@ -53,7 +55,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'products',
     'users',
+    'orders',
+    'payments',
 ]
 
 SITE_ID = 1
@@ -62,6 +67,14 @@ SITE_ID = 1
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
+
+# M-Pesa API Credentials (Replace with your actual keys)
+MPESA_CONSUMER_KEY = "Ax0ACPVHSEawrZB8umxCRTDYSUiTFVLrYIpksyvXjqc7AkkY"
+MPESA_CONSUMER_SECRET = "T7I1ACca8SaYga7K105xKlJpN2n5jTyGcnUUJI1yNs1nvHAlqnXLnTRgHDndcWUx"
+MPESA_SHORTCODE = "174379"  
+MPESA_PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+MPESA_CALLBACK_URL = "https://yourdomain.com/api/mpesa/callback/"
+
 
 # Social Auth Configuration
 SOCIALACCOUNT_PROVIDERS = {
@@ -100,9 +113,15 @@ LOGOUT_REDIRECT_URL = "/api/auth/logout/"
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES' : [
+    'DEFAULT_AUTHENTICATION_CLASSES' : (
       'rest_framework_simplejwt.authentication.JWTAuthentication',
-      ],
+      ),
+    'DEFAULT_PERMISSION_CLASSES':(
+        'rest_framework.permissions.IsAuthenticated',
+      ),
+     'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',  # Allow public access by default
+    ),
 }
 
 
