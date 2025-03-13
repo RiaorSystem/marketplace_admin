@@ -44,4 +44,19 @@ class CustomUser(AbstractUser):
         return self.username
 
 
+class Contact(models.Model):
+    """Stores the contacts a user has saved"""
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="contacts")
+    contact_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="added_by", null=True, blank=True)
+    phone_number = models.CharField(max_length=15)
+
+    class Meta:
+        unique_together = ("owner", "phone_number")
+
+    def save(self, *args, **kwargs):
+        """Linking to a registered user if the phone number matches"""
+        if not self.contact_user:
+            self.contact_user = CustomUser.objects.filter(phone_number=self.phone_number).first()
+        super().save(*args, **kwargs)
+
 
