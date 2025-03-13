@@ -1,11 +1,20 @@
 from rest_framework.views import APIView
+from rest_framework import permissions
 from rest_framework.response import Response
-from .serializers import RegisterSerializer
 from .serializers import SignInSerializer
-from rest_framework import status
+from rest_framework import status, generics
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.contrib.auth import authenticate
-from .serializers import SignInSerializer
+from rest_framework.permissions import IsAuthenticated
+from .serializers import SignInSerializer, UserProfileSerializer, RegisterSerializer, ChangePasswordSerializer, ContactSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import generics
+from .models import Contact, CustomUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from .serializers import SignInSerializer, UserProfileSerializer, RegisterSerializer, ChangePasswordSerializer, UserSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import generics
+from .models import CustomUser
 
 
 class SignUpView(APIView):
@@ -27,5 +36,75 @@ class  SignInView(APIView):
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
-            })
+                'user': {
+                    'id': user.id,
+                    'email': user.email,
+                    'username': user.username,
+                    'phone_number': user.phone_number,
+                    'profile_picture': user.profile_picture.url if user.profile_picture else None,
+                    'bio': user.bio,
+                    "role": user.role
+                }
+            }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class ProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def get(self, request):
+        serializer = UserProfileSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request):
+        serializer = UserProfileSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class ChangePasswordView(APIView):
+    """View for changing user password"""
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            user = request.user
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class SyncContactsView(APIView):
+    """Upload phone contacts to check registered users"""
+    permission_classes =  [IsAuthenticated]
+
+    def post(self, request):
+        contacts = request.data.get("contacts", [])
+        user = request.user
+
+        matched_contacts = []
+        for phone in contacts:
+            contact, created = Contact.objects.get_or_create(owner=user, phone_number=phone)
+            if contact.contact_user:
+                matched_contacts.append(contact)
+
+        return Response (ContactSerializer(matched_contacts, many=True).data, status=status.HTTP_200_OK)
+    
+class GetContactsView(APIView):
+    """Retrieve a list of registerd users from contacts """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        contacts = Contact.objects.filter(owner=request.user, contact_user__isnull=False)
+        return Response(ContactSerializer(contacts, many=True).data, status=status.HTTP_200_OK)
+class AdminUserListView(generics.ListAPIView):
+    queryset = CustomUser.objects
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+
+class AdminUserDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]

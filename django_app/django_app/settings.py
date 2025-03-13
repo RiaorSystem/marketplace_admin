@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from datetime import timedelta 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +30,8 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Application definition
 
@@ -40,15 +42,88 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.twitter',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    'rest_framework.authtoken',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'products',
     'users',
+    'orders',
+    'payments',
+    'escrow',
+    'chat',
 ]
+
+SITE_ID = 1
+
+# OAuth Settings
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+
+# M-Pesa API Credentials (Replace with your actual keys)
+MPESA_CONSUMER_KEY = "Ax0ACPVHSEawrZB8umxCRTDYSUiTFVLrYIpksyvXjqc7AkkY"
+MPESA_CONSUMER_SECRET = "T7I1ACca8SaYga7K105xKlJpN2n5jTyGcnUUJI1yNs1nvHAlqnXLnTRgHDndcWUx"
+MPESA_SHORTCODE = "174379"  
+MPESA_PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+MPESA_CALLBACK_URL = "https://yourdomain.com/api/mpesa/callback/"
+
+
+# Social Auth Configuration
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['email', 'profile'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    },
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email'],
+        'FIELDS': ['id', 'email', 'name'],
+    },
+    'twitter': {
+        'SCOPE': ['email'],
+    }
+}
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+SOCIALACCOUNT_PROVIDERS['google']['APP'] = {
+    'client_id': '957706556669-mit6b0md338agctrtp25b81ne9v0uko2.apps.googleusercontent.com',
+    'secret': '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',
+    'key': ''
+}
+
+# Redirect social logins to API login endpoint
+ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
+ACCOUNT_SIGNUP_REDIRECT_URL = "/api/auth/signin/"
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
+LOGIN_REDIRECT_URL = "/api/auth/signin/"
+LOGOUT_REDIRECT_URL = "/api/auth/logout/"
+
+
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES' : [
+    'DEFAULT_AUTHENTICATION_CLASSES' : (
       'rest_framework_simplejwt.authentication.JWTAuthentication',
-      ],
+      ),
+    'DEFAULT_PERMISSION_CLASSES':(
+        'rest_framework.permissions.IsAuthenticated',
+      ),
+     'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',  # Allow public access by default
+    ),
 }
 
 
@@ -66,6 +141,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'django_app.urls'
