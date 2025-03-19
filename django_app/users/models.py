@@ -3,22 +3,28 @@ from django.db import models
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, username, password=None, **extra_fields):
+    def create_user(self, email, password=None, username=None,**extra_fields):
+        """Create and return a regular user with an email and password."""
         if not email:
             raise ValueError("The Email field must be set")
-        
-        email = self.normalize_email(email)  
+
+        email = self.normalize_email(email)
+
+        if username is None:
+            username = email.split("@")[0]
+        extra_fields.setdefault("is_active", True)
+
         user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
-    
-    def create_superuser(self, email, username, password):
-        user = self.create_user(email, username, password)
-        user.is_staff = True
-        user.is_superuser = True
-        user.save(using=self._db)
-        return user
+
+    def create_superuser(self, email, password=None, username=None, **extra_fields):
+        """Create and return a superuser with an email and password."""
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+
+        return self.create_user(email, password, username, **extra_fields)
     
 class UserRoles(models.TextChoices):
     ADMIN = "admin", "Admin"
@@ -34,14 +40,15 @@ class CustomUser(AbstractUser):
 
     groups = models.ManyToManyField(Group, related_name="customuser_groups")
     user_permissions = models.ManyToManyField(Permission, related_name="customuser_permissions")
+    username = models.CharField(max_length=150, unique=True, blank=True, null=True)
 
     USERNAME_FIELD = 'email'  
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.username
+        return self.email
 
 
 class Contact(models.Model):

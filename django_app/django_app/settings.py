@@ -37,6 +37,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Application definition
 
 INSTALLED_APPS = [
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,7 +58,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'products',
-    'users',
     'orders',
     'payments',
     'escrow',
@@ -174,8 +174,16 @@ WSGI_APPLICATION = 'django_app.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'betanet',
+        'USER': 'ron',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',  # Ensure this is correct
+        'PORT': '5432',  # Default PostgreSQL port
+    }
 }
+
 
 
 # Password validation
@@ -221,3 +229,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' 
 
 CORS_ALLOW_ALL_ORIGINS = True
+
