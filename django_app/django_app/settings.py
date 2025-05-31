@@ -9,10 +9,10 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-from datetime import timedelta 
+from datetime import timedelta
 from pathlib import Path
 import os
-import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,7 +75,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 # M-Pesa API Credentials (Replace with your actual keys)
 MPESA_CONSUMER_KEY = "Ax0ACPVHSEawrZB8umxCRTDYSUiTFVLrYIpksyvXjqc7AkkY"
 MPESA_CONSUMER_SECRET = "T7I1ACca8SaYga7K105xKlJpN2n5jTyGcnUUJI1yNs1nvHAlqnXLnTRgHDndcWUx"
-MPESA_SHORTCODE = "174379"  
+MPESA_SHORTCODE = "174379"
 MPESA_PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
 MPESA_CALLBACK_URL = "https://yourdomain.com/api/mpesa/callback/"
 
@@ -115,23 +115,22 @@ LOGIN_REDIRECT_URL = "/api/auth/signin/"
 LOGOUT_REDIRECT_URL = "/api/auth/logout/"
 
 
-
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES' : (
-      'rest_framework_simplejwt.authentication.JWTAuthentication',
-      ),
-    'DEFAULT_PERMISSION_CLASSES':(
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-      ),
-     'DEFAULT_PERMISSION_CLASSES': (
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',  # Allow public access by default
     ),
 }
 
 
-SIMPLE_JWT ={
-    'ACCESS_TOKEN_LIFETIME' : timedelta(minutes = 60),
-    'REFRESH_TOKEN_LIFETIME' : timedelta(days = 1),
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 MIDDLEWARE = [
@@ -176,9 +175,9 @@ WSGI_APPLICATION = 'django_app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'betanet',
-        'USER': 'ron',
-        'PASSWORD': 'password',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'riaor',
         'HOST': 'localhost',  # Ensure this is correct
         'PORT': '5432',  # Default PostgreSQL port
     }
@@ -187,7 +186,6 @@ DATABASES = {
 DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL:
     DATABASES['default'] = dj_database_url.config(default=DATABASE_URL)
-
 
 
 # Password validation
@@ -230,7 +228,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
-
