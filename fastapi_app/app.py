@@ -4,4 +4,4 @@ app =  FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to Betanet Marketplace!"}
+    return {"message": "Welcome to Betarnet Marketplace!"}
