@@ -49,7 +49,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Application definition
 
 INSTALLED_APPS = [
-    'users',
+    'django_app.users',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
