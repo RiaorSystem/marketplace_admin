@@ -13,6 +13,6 @@ from django.core.asgi import get_asgi_application
 
 settings_module = 'django_app.deployment' if 'RENDER_EXTERNAL_HOSTNAME' in os.environ else 'django_app.settings'
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_app.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_app.django_app.settings')
 
 application = get_asgi_application()
