@@ -166,7 +166,7 @@ MIDDLEWARE = [
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-ROOT_URLCONF = 'django_app.urls'
+ROOT_URLCONF = 'django_app.django_app.urls'
 
 TEMPLATES = [
     {
@@ -184,7 +184,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'django_app.wsgi.application'
+WSGI_APPLICATION = 'django_app.django_app.wsgi.application'
 
 
 # Database
