@@ -22,8 +22,8 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Add project root to Python path
-sys.path.insert(0, str(BASE_DIR))
-sys.path.insert(0, os.path.join(BASE_DIR, 'django_app'))
+#sys.path.insert(0, str(BASE_DIR))
+#sys.path.insert(0, os.path.join(BASE_DIR, 'django_app'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
