@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import sys
 from datetime import timedelta
 from pathlib import Path
 import os
@@ -20,8 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Add project root to Python path
 sys.path.insert(0, str(BASE_DIR))
-sys.path.insert(0, str(BASE_DIR / 'django_app'))  # Add app directory
-
+sys.path.insert(0, os.path.join(BASE_DIR, 'django_app'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
