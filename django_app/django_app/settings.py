@@ -76,7 +76,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'users',
+    'django_app.users',
     'products',
     'orders',
     'payments',
