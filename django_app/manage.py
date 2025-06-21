@@ -6,7 +6,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    settings_module = 'django_app.deployment' if 'RENDER_EXTERNAL_HOSTNAME' in os.environ else 'django_app.settings'
+    settings_module = 'django_app.deployment' if 'RENDER_EXTERNAL_HOSTNAME' in os.environ else 'django_app.django_app.settings'
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_module)
 
     try:
