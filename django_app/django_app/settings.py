@@ -166,7 +166,7 @@ MIDDLEWARE = [
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-ROOT_URLCONF = 'marketplace_admin.django_app.django_app.urls.py'
+ROOT_URLCONF = 'django_app.django_app.urls.py'
 
 TEMPLATES = [
     {
