@@ -2,11 +2,12 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from pathlib import Path
 
 
 def main():
     """Run administrative tasks."""
-    settings_module = 'django_app.deployment' if 'RENDER_EXTERNAL_HOSTNAME' in os.environ else 'django_app.django_app.settings'
+    settings_module = 'django_app.deployment' if 'RENDER_EXTERNAL_HOSTNAME' in os.environ else 'django_app.settings'
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_module)
 
     try:
@@ -22,3 +23,9 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+print("BASE_DIR:", BASE_DIR)
+print("sys.path BEFORE:", sys.path)
+sys.path.insert(0, str(BASE_DIR))
+print("sys.path AFTER:", sys.path)
