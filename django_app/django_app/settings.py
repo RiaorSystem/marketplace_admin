@@ -166,7 +166,7 @@ MIDDLEWARE = [
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = './urls'
 
 TEMPLATES = [
     {
